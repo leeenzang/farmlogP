@@ -45,7 +45,6 @@ class LogoutView(APIView):
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
 # 사용자 프로필 뷰 
 class ProfileView(generics.RetrieveAPIView):
     queryset = get_user_model().objects.all()
