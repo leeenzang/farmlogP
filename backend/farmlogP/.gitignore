@@ -1,0 +1,33 @@
+.history/
+
+# Python 관련
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# 가상 환경
+venv/
+env/
+
+# 환경 설정 파일
+.env
+
+# 패키지 관리
+Pipfile.lock
+poetry.lock
+
+# Django 관련
+db.sqlite3
+*.log
+media/
+uploads/
+
+# IDE/편집기 관련
+.idea/
+.vscode/
+*.swp
+
+# OS 관련
+.DS_Store
+Thumbs.db
