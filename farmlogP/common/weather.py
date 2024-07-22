@@ -1,6 +1,6 @@
 import os
 import requests
-import arrow
+import xml.etree.ElementTree as ET
 from dotenv import load_dotenv
 
 # 환경 변수 로드 (루트 디렉토리에서)
@@ -13,14 +13,13 @@ SERVICE_KEY = os.environ.get("SERVICE_KEY")
 # API URL
 api_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
 
-# 요청 파라미터 설정 (관측 위치: 서울특별시 강남구 개포2동)
 params = {
     'serviceKey': SERVICE_KEY,
     'numOfRows': '1000',
-    'dataType': 'JSON',
+    'dataType': 'XML',  # XML 형식으로 변경
     'base_time': '0500',
-    'nx': '55',
-    'ny': '127',
+    'nx': '60',
+    'ny': '137',
 }
 
 def fetch_data_from_kma(current_time_kst, category, fcst_time):
@@ -32,15 +31,18 @@ def fetch_data_from_kma(current_time_kst, category, fcst_time):
 
         response = requests.get(api_url, params=params)
         response.raise_for_status()
-        data = response.json()
+        
+        # XML 응답 파싱
+        root = ET.fromstring(response.content)
+        items = root.findall(".//item")
 
-        items = data['response']['body']['items']['item']
-        found = next((x for x in items if x['category'] == category and x['fcstTime'] == fcst_time), None)
+        found = None
+        for item in items:
+            if item.find('category').text == category and item.find('fcstTime').text == fcst_time:
+                found = item.find('fcstValue').text
+                break
 
-        if found:
-            return found['fcstValue']
-        else:
-            return None
+        return found
 
     except requests.exceptions.HTTPError as errh:
         print(f"HTTP Error: {errh}")
@@ -50,5 +52,7 @@ def fetch_data_from_kma(current_time_kst, category, fcst_time):
         print(f"Timeout Error: {errt}")
     except requests.exceptions.RequestException as err:
         print(f"Something went wrong: {err}")
+    except ET.ParseError as e:
+        print(f"XML Parse Error: {e}")
 
     return None
