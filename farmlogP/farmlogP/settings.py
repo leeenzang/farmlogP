@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'dashboard',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "farmlogP.urls"
@@ -144,3 +146,7 @@ SIMPLE_JWT = {
     ),
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]

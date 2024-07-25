@@ -31,3 +31,5 @@ uploads/
 # OS 관련
 .DS_Store
 Thumbs.db
+
+check_kma_api.py
