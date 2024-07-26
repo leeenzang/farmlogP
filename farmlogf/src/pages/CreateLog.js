@@ -28,9 +28,7 @@ const CreateLog = () => {
 
         // 선택한 날짜로 음력 날짜를 계산하기 위한 API 호출
         try {
-            const response = await axios.post('http://127.0.0.1:8000/farmlog/calculate-lunar-date/', {
-                date
-            });
+            const response = await axios.post('http://127.0.0.1:8000/farmlog/calculate-lunar-date/', { date });
             setLog((prevLog) => ({
                 ...prevLog,
                 lunar_date: response.data.lunar_date
@@ -42,8 +40,9 @@ const CreateLog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Submitting log:', log); // 디버깅을 위한 콘솔 로그 추가
 
-        const accessToken = localStorage.getItem('access_token');
+        const accessToken = localStorage.getItem('access');
         if (!accessToken) {
             console.error('No access token found');
             return;
@@ -52,13 +51,22 @@ const CreateLog = () => {
         try {
             const response = await axios.post('http://127.0.0.1:8000/farmlog/logs/', log, {
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
                 }
             });
             console.log('Log created:', response.data);
             // 성공 시 폼 초기화 또는 다른 동작을 추가할 수 있습니다.
+            setLog({
+                date: new Date().toISOString().split('T')[0],
+                lunar_date: '',
+                max_temp: '',
+                min_temp: '',
+                weather: '',
+                content: ''
+            });
         } catch (error) {
-            console.error('Failed to create log:', error);
+            console.error('Failed to create log:', error.response ? error.response.data : error.message);
         }
     };
 
