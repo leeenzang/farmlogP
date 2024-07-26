@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const CreateLog = () => {
@@ -19,23 +19,40 @@ const CreateLog = () => {
         }));
     };
 
+    const fetchWeatherAndLunarDate = async (date) => {
+        try {
+            const lunarResponse = await axios.post('http://127.0.0.1:8000/farmlog/calculate-lunar-date/', { date });
+            const lunar_date = lunarResponse.data.lunar_date;
+
+            const weatherResponse = await axios.get('http://127.0.0.1:8000/dashboard/', {
+                params: { date }
+            });
+            const weather_data = weatherResponse.data;
+
+            setLog((prevLog) => ({
+                ...prevLog,
+                lunar_date,
+                max_temp: weather_data.highest_temp,
+                min_temp: weather_data.lowest_temp,
+                weather: weather_data.current_weather
+            }));
+        } catch (error) {
+            console.error('Failed to fetch data:', error);
+        }
+    };
+
+    useEffect(() => {
+        const todayDate = new Date().toISOString().split('T')[0];
+        fetchWeatherAndLunarDate(todayDate);
+    }, []);
+
     const handleDateChange = async (e) => {
         const date = e.target.value;
         setLog((prevLog) => ({
             ...prevLog,
             date
         }));
-
-        // 선택한 날짜로 음력 날짜를 계산하기 위한 API 호출
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/farmlog/calculate-lunar-date/', { date });
-            setLog((prevLog) => ({
-                ...prevLog,
-                lunar_date: response.data.lunar_date
-            }));
-        } catch (error) {
-            console.error('Failed to fetch lunar date:', error);
-        }
+        fetchWeatherAndLunarDate(date);
     };
 
     const handleSubmit = async (e) => {
