@@ -10,6 +10,9 @@ const CreateLog = () => {
         weather: '',
         content: ''
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -20,6 +23,8 @@ const CreateLog = () => {
     };
 
     const fetchWeatherAndLunarDate = async (date) => {
+        setLoading(true);
+        setError('');
         try {
             const lunarResponse = await axios.post('http://127.0.0.1:8000/farmlog/calculate-lunar-date/', { date });
             const lunar_date = lunarResponse.data.lunar_date;
@@ -38,6 +43,9 @@ const CreateLog = () => {
             }));
         } catch (error) {
             console.error('Failed to fetch data:', error);
+            setError('데이터를 가져오는데 실패했습니다.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -57,11 +65,13 @@ const CreateLog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting log:', log); // 디버깅을 위한 콘솔 로그 추가
+        setLoading(true);
+        setError('');
+        setSuccess('');
 
         const accessToken = localStorage.getItem('access');
         if (!accessToken) {
-            console.error('No access token found');
+            setError('No access token found');
             return;
         }
 
@@ -72,6 +82,7 @@ const CreateLog = () => {
                     'Content-Type': 'application/json'
                 }
             });
+            setSuccess('기록이 성공적으로 작성되었습니다.');
             console.log('Log created:', response.data);
             // 성공 시 폼 초기화 또는 다른 동작을 추가할 수 있습니다.
             setLog({
@@ -84,6 +95,9 @@ const CreateLog = () => {
             });
         } catch (error) {
             console.error('Failed to create log:', error.response ? error.response.data : error.message);
+            setError('기록 작성에 실패했습니다.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -144,7 +158,9 @@ const CreateLog = () => {
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit">제출하기</button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {success && <p style={{ color: 'green' }}>{success}</p>}
+                <button type="submit" disabled={loading}>{loading ? '제출 중...' : '제출하기'}</button>
             </form>
         </div>
     );

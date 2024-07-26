@@ -8,6 +8,8 @@ function LoginPage() {
     userID: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { setIsAuthenticated } = useContext(AuthContext); // AuthContext 사용
   const navigate = useNavigate();
 
@@ -20,6 +22,8 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/users/login/', {
@@ -38,8 +42,9 @@ function LoginPage() {
       navigate('/');
     } catch (error) {
       console.error('로그인 실패:', error.response ? error.response.data : error.message);
-      // 에러 메시지 표시
-      alert('로그인 실패: ' + (error.response ? error.response.data.detail : error.message));
+      setError('로그인 실패: ' + (error.response ? error.response.data.detail : error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,13 +53,14 @@ function LoginPage() {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="userID">아이디</label>
-          <input type="text" id="userID" value={formData.userID} onChange={handleChange} />
+          <input type="text" id="userID" value={formData.userID} onChange={handleChange} required />
         </div>
         <div>
           <label htmlFor="password">비밀번호</label>
-          <input type="password" id="password" value={formData.password} onChange={handleChange} />
+          <input type="password" id="password" value={formData.password} onChange={handleChange} required />
         </div>
-        <button type="submit">로그인</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit" disabled={loading}>{loading ? '로그인 중...' : '로그인'}</button>
         <Link to="/signup">
           <button type="button">회원가입</button>
         </Link>
