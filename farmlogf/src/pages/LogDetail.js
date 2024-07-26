@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext'; // AuthContext 임포트
-import { Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-function ViewLogs() {
-  const [logs, setLogs] = useState([]);
+function LogDetail() {
+  const [log, setLog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { setIsAuthenticated } = useContext(AuthContext); // AuthContext 사용
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const fetchLog = async () => {
       const accessToken = localStorage.getItem('access');
       if (!accessToken) {
         setError('로그인이 필요합니다.');
@@ -22,13 +23,13 @@ function ViewLogs() {
       }
 
       try {
-        const response = await axios.get('http://127.0.0.1:8000/farmlog/logsview/', {
+        const response = await axios.get(`http://127.0.0.1:8000/farmlog/logs/${id}/`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
           }
         });
-        setLogs(response.data);
+        setLog(response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           // 토큰이 만료된 경우, 토큰을 새로 고침
@@ -46,13 +47,13 @@ function ViewLogs() {
             localStorage.setItem('access', refreshResponse.data.access);
 
             // 다시 요청 시도
-            const retryResponse = await axios.get('http://127.0.0.1:8000/farmlog/logsview/', {
+            const retryResponse = await axios.get(`http://127.0.0.1:8000/farmlog/logs/${id}/`, {
               headers: {
                 'Authorization': `Bearer ${refreshResponse.data.access}`,
                 'Content-Type': 'application/json'
               }
             });
-            setLogs(retryResponse.data);
+            setLog(retryResponse.data);
           } catch (refreshError) {
             setError('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
             setIsAuthenticated(false);
@@ -66,8 +67,8 @@ function ViewLogs() {
       }
     };
 
-    fetchLogs();
-  }, [setIsAuthenticated, navigate]);
+    fetchLog();
+  }, [id, setIsAuthenticated, navigate]);
 
   if (loading) {
     return <p>로딩 중...</p>;
@@ -79,18 +80,21 @@ function ViewLogs() {
 
   return (
     <div>
-      <h1>기록 보기</h1>
-      <ul>
-        {logs.map((log) => (
-          <li key={log.id}>
-            <Link to={`/log/${log.id}`}>
-              <p>{log.title}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {log ? (
+        <>
+          <h1>{log.title}</h1>
+          <p>날짜: {log.date}</p>
+          <p>음력 날짜: {log.lunar_date}</p>
+          <p>최고 온도: {log.max_temp}</p>
+          <p>최저 온도: {log.min_temp}</p>
+          <p>날씨: {log.weather}</p>
+          <p>내용: {log.content}</p>
+        </>
+      ) : (
+        <p>기록을 찾을 수 없습니다.</p>
+      )}
     </div>
   );
 }
 
-export default ViewLogs;
+export default LogDetail;

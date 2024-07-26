@@ -10,6 +10,7 @@ import Logout from './pages/Logout';
 import Signup from './pages/SignupPage';
 import ProtectedRoute from './ProtectedRoute'; // ProtectedRoute 컴포넌트를 임포트
 import { AuthProvider } from './context/AuthContext'; // AuthProvider 임포트
+import LogDetail from './pages/LogDetail';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/log/:id" element={<LogDetail />} />
           </Routes>
         </div>
       </Router>
