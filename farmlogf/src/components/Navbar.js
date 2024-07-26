@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext'; // AuthContext 임포트
 
 function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext); // AuthContext 사용
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // 로컬 스토리지에서 토큰 확인
-    const token = localStorage.getItem('access');
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('access');

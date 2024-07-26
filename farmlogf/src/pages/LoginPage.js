@@ -1,4 +1,3 @@
-// src/pages/LoginPage.js
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -38,9 +37,9 @@ function LoginPage() {
       // 홈 페이지로 리디렉션
       navigate('/');
     } catch (error) {
-      console.error('로그인 실패:', error.response.data);
+      console.error('로그인 실패:', error.response ? error.response.data : error.message);
       // 에러 메시지 표시
-      alert('로그인 실패: ' + error.response.data.detail);
+      alert('로그인 실패: ' + (error.response ? error.response.data.detail : error.message));
     }
   };
 

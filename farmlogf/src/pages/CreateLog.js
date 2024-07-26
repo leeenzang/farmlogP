@@ -89,10 +89,10 @@ const CreateLog = () => {
 
     return (
         <div>
-            <h1>Create Log</h1>
+            <h1>기록하기</h1>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="date">Date:</label>
+                    <label htmlFor="date">날짜</label>
                     <input
                         type="date"
                         id="date"
@@ -101,7 +101,7 @@ const CreateLog = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="lunar_date">Lunar Date:</label>
+                    <label htmlFor="lunar_date">음력날짜</label>
                     <input
                         type="text"
                         id="lunar_date"
@@ -110,7 +110,7 @@ const CreateLog = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="max_temp">Max Temperature:</label>
+                    <label htmlFor="max_temp">최고온도</label>
                     <input
                         type="number"
                         id="max_temp"
@@ -119,7 +119,7 @@ const CreateLog = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="min_temp">Min Temperature:</label>
+                    <label htmlFor="min_temp">최저온도</label>
                     <input
                         type="number"
                         id="min_temp"
@@ -128,7 +128,7 @@ const CreateLog = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="weather">Weather:</label>
+                    <label htmlFor="weather">날씨</label>
                     <input
                         type="text"
                         id="weather"
@@ -137,14 +137,14 @@ const CreateLog = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="content">Content:</label>
+                    <label htmlFor="content">내용</label>
                     <textarea
                         id="content"
                         value={log.content}
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit">Submit</button>
+                <button type="submit">제출하기</button>
             </form>
         </div>
     );
