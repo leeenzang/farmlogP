@@ -16,7 +16,7 @@ api_url = "http://apis.data.go.kr/B090041/openapi/service/LrsrCldInfoService/get
 def get_lunar_date(sol_year, sol_month, sol_day):
     try:
         params = {
-            'ServiceKey': SERVICE_KEY,
+            'serviceKey': SERVICE_KEY,  # 여기 대소문자 구분 주의
             'solYear': sol_year,
             'solMonth': f"{sol_month:02d}",
             'solDay': f"{sol_day:02d}",
