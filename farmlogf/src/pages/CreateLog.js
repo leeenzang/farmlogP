@@ -8,7 +8,8 @@ const CreateLog = () => {
         max_temp: '',
         min_temp: '',
         weather: '',
-        content: ''
+        content: '',
+        title: '' // 제목 필드 추가
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -34,12 +35,16 @@ const CreateLog = () => {
             });
             const weather_data = weatherResponse.data;
 
+            const dayOfWeek = new Date(date).toLocaleDateString('ko-KR', { weekday: 'long' });
+            const title = `${date.split('-')[0]}년 ${date.split('-')[1]}월 ${date.split('-')[2]}일 ${dayOfWeek} 기록입니다.`;
+
             setLog((prevLog) => ({
                 ...prevLog,
                 lunar_date,
                 max_temp: weather_data.highest_temp,
                 min_temp: weather_data.lowest_temp,
-                weather: weather_data.current_weather
+                weather: weather_data.current_weather,
+                title // 제목 설정
             }));
         } catch (error) {
             console.error('Failed to fetch data:', error);
@@ -91,7 +96,8 @@ const CreateLog = () => {
                 max_temp: '',
                 min_temp: '',
                 weather: '',
-                content: ''
+                content: '',
+                title: ''
             });
         } catch (error) {
             console.error('Failed to create log:', error.response ? error.response.data : error.message);

@@ -51,12 +51,7 @@ function ViewLogs() {
       <ul>
         {logs.map((log) => (
           <li key={log.id}>
-            <p>날짜: {log.date}</p>
-            <p>음력 날짜: {log.lunar_date}</p>
-            <p>최고 온도: {log.max_temp}</p>
-            <p>최저 온도: {log.min_temp}</p>
-            <p>날씨: {log.weather}</p>
-            <p>내용: {log.content}</p>
+            <p>{log.title}</p>
           </li>
         ))}
       </ul>
