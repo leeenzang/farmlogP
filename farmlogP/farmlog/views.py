@@ -8,7 +8,6 @@ from common.lunar_api import get_lunar_date
 from django.utils.dateparse import parse_date  # Import parse_date
 from rest_framework.response import Response
 import xml.etree.ElementTree as ET
-from common.lunar_api import get_lunar_date
 
 # 기록하기
 class FarmLogListCreateView(generics.ListCreateAPIView):
