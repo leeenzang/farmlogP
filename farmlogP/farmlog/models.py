@@ -9,6 +9,7 @@ class FarmLog(models.Model):
     min_temp = models.FloatField(null=True, blank=True)
     weather = models.CharField(max_length=50, null=True, blank=True)
     content = models.TextField()
+    title = models.CharField(max_length=100, default='Default Title')  # 기본값 추가
 
     def __str__(self):
-        return f"{self.date} - {self.content[:20]}"
+        return f"{self.date} - {self.title}"
