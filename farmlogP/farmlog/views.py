@@ -62,6 +62,12 @@ class FarmLogListView(generics.ListAPIView):
 
     def get_queryset(self):
         return FarmLog.objects.filter(user=self.request.user)
+    
+class FarmLogDetailView(generics.RetrieveAPIView):
+    queryset = FarmLog.objects.all()
+    serializer_class = FarmLogSerializer
+    permission_classes = [IsAuthenticated]
+
 
 class CalculateLunarDateView(APIView):
     def post(self, request, *args, **kwargs):
