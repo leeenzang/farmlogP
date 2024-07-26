@@ -53,9 +53,11 @@ class FarmLogListCreateView(generics.ListCreateAPIView):
         
 # 기록보기
 class FarmLogListView(generics.ListAPIView):
-    queryset = FarmLog.objects.all()
     serializer_class = FarmLogSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return FarmLog.objects.filter(user=self.request.user)
 
 class CalculateLunarDateView(APIView):
     def post(self, request, *args, **kwargs):
