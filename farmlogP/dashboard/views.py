@@ -18,6 +18,7 @@ STATUS_OF_PRECIPITATION = {
     '3': '눈',
     '4': '소나기'
 }
+
 class DashboardView(APIView):
     def get(self, request):
         # 현재 날짜 (KST 기준)
