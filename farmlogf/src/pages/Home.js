@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import Dashboard from './Dashboard';
+import Welcome from './Welcome';  // 로그인하지 않은 유저를 위한 컴포넌트
 
-function Home() {
+const Home = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main content of the home page.</p>
+      {isAuthenticated ? <Dashboard /> : <Welcome />}
     </div>
   );
-}
+};
 
 export default Home;
